@@ -14,6 +14,64 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 
+var createBoard = function(n) {
+  var matrix = [];
+  for (var i = 0; i < n; i++) {
+    matrix.push(Array(n));
+    matrix[i].fill(0);
+  }
+  return matrix;
+};
+
+
+var placeQueen = function(x, y, matrix) {
+  //find 4 starting positions
+  // in [x,y] style
+  var matrix = cloneMatrix(matrix);
+
+  var n = matrix.length;
+
+  var vert = [x, 0],
+    horiz = [0, y],
+    major = [],
+    minor = [];
+
+  if (x > y) {
+    major = [0, y - x];
+  } else {
+    major = [x - y, 0];
+  }
+
+  if (x + y >= n) {
+    minor = [n, x - n];
+  } else {
+    minor = [x + y, 0];
+  }
+
+
+  //iterate through starting positions
+  var iterator = function (x, y, changeX, changeY, string) {
+    if ((matrix[y] !== undefined) && (matrix[y][x] !== undefined)) {
+      //continue iteration
+      console.log(string);
+      matrix[y][x] = -1;
+      iterator(x + changeX, y + changeY, changeX, changeY);
+    }
+  };
+
+  iterator(vert[0], vert[1], 0, 1, 'vert'); //vert
+  iterator(horiz[0], horiz[1], 1, 0, 'horiz'); //horiz
+  iterator(major[0], major[1], 1, 1, 'major'); //major
+  iterator(minor[0], minor[1], -1, 1, 'minor'); //minor
+
+  matrix[y][x] = 1;
+
+  console.log(matrix);
+  return matrix;
+  //set x, y to 1
+  //return matrix copy
+};
+
 var cloneMatrix = function(matrix) {
   var result = [];
   for (var x in matrix) {
@@ -31,7 +89,6 @@ var rookSol = function(n) {
 
   var recursor = function(b, depth, cols) {
     if (depth < size) {
-      //add children to solution tree
       for (var i = 0; i < size; i++) {
         //make new board with piece set down in valid position
         if (cols.indexOf(i) === -1) {
@@ -53,7 +110,9 @@ var rookSol = function(n) {
   return sol;
 };
 
+var queenSol = function(n) {
 
+};
 
 window.findNRooksSolution = function(n) {
   if (n === 0) {

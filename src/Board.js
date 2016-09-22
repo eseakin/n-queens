@@ -112,7 +112,7 @@
           tot++;
         }
       }
-      return tot > 1; // fixme
+      return tot > 1;
     },
 
     // test if any columns on this board contain conflicts
@@ -123,7 +123,7 @@
           return true;
         }
       }
-      return false; // fixme
+      return false;
     },
 
 
@@ -133,12 +133,40 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      //parse input as a x, y coord for matrix
+      var x = 0;
+      var y = 0;
+      var ind = majorDiagonalColumnIndexAtFirstRow;
+      if (ind < 0) {
+        y = ind * -1;
+      } else {
+        x = ind;
+      }
+      //number of queens
+      var count = 0;
+      var matrix = this.rows();
+      var recursor = function(x, y) {
+        if (matrix[y][x] === 1) {
+          count++;
+        }
+        if (matrix[y + 1] !== undefined) {
+          recursor(x + 1, y + 1);
+        }
+      };
+
+      recursor(x, y);
+      return count > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var size = this.get('n');
+      for (var i = ((size -1 ) * -1); i < size; i++) {
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     },
 
 
@@ -148,11 +176,42 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var size = this.get('n');
+      var ind = minorDiagonalColumnIndexAtFirstRow;
+      var x = 0, y = 0;
+      if (ind >= size) {
+        x = size - 1;
+        y = ind - size + 1;
+      } else {
+        x = ind;
+      }
+
+      var count = 0;
+      var matrix = this.rows();
+      var recursor = function(x, y) {
+        if (matrix[y][x] === 1) {
+          count++;
+        }
+        if (matrix[y + 1] !== undefined) {
+          recursor(x - 1, y + 1);
+        }
+      };
+
+      recursor(x, y);
+      return count > 1;
+
+
+      return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+      var size = this.get('n');
+      for (var i = 0; i < size * 2 - 1; i++) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
       return false; // fixme
     }
 
