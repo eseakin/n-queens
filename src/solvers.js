@@ -27,6 +27,7 @@ var createBoard = function(n) {
 var placeQueen = function(x, y, matrix) {
   //find 4 starting positions
   // in [x,y] style
+  console.log('placing queen at x:' + x + " y: " + y);
   var matrix = cloneMatrix(matrix);
 
   var n = matrix.length;
@@ -37,23 +38,29 @@ var placeQueen = function(x, y, matrix) {
     minor = [];
 
   if (x > y) {
-    major = [0, y - x];
-  } else {
     major = [x - y, 0];
+  } else {
+    major = [0, y - x];
   }
 
-  if (x + y >= n) {
-    minor = [n, x - n];
+//the holy grail
+  if ((x + y) >= n) {
+    minor = [(n - 1), (x + y - n + 1)];
   } else {
     minor = [x + y, 0];
   }
-
-
+  console.log(vert);
+  console.log(horiz);
+  console.log(major);
+  console.log(minor);
+  var counter = 0;
   //iterate through starting positions
   var iterator = function (x, y, changeX, changeY, string) {
     if ((matrix[y] !== undefined) && (matrix[y][x] !== undefined)) {
+      counter++;
+      console.log('iteration #' + counter);
       //continue iteration
-      console.log(string);
+      // console.log(string);
       matrix[y][x] = -1;
       iterator(x + changeX, y + changeY, changeX, changeY);
     }
@@ -66,7 +73,6 @@ var placeQueen = function(x, y, matrix) {
 
   matrix[y][x] = 1;
 
-  console.log(matrix);
   return matrix;
   //set x, y to 1
   //return matrix copy
@@ -111,7 +117,42 @@ var rookSol = function(n) {
 };
 
 var queenSol = function(n) {
+  //for each elem in first row, placequeen there
+  //recursively call queensol n - 1 times on each matrix
+  //if unable to add queen before end of calls, do not add to solutions
+  var sol = [];
+  var myBoard = createBoard(n);
 
+  var recursor = function(b, depth) {
+    if (depth < n) {
+      for (var i = 0; i < n; i++) {
+        //if it finds a empty spot
+        if (b[depth][i] === 0) {
+          var newBoard = placeQueen(i, depth, b);
+          recursor(newBoard, depth + 1);
+        }
+      }
+    } else {
+      sol.push(b);
+    }
+  };
+
+  recursor(myBoard, 0);
+  // for (var m of sol) {
+  //   for (var y of m) {
+  //     for (var x of y) {
+  //       if (x === -1) {
+  //         x = 0;
+  //       }
+  //     }
+  //   }
+  // }
+  console.log(sol[0]);
+  return sol;
+  //create new board
+  //recurse over board
+  //call recurser
+  //return sol
 };
 
 window.findNRooksSolution = function(n) {
