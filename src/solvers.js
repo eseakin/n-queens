@@ -229,3 +229,62 @@ window.countNQueensSolutions = function(n) {
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
+
+var consoleTimer = function (cb) {
+  console.time('start');
+  cb();
+  console.timeEnd('start');
+};
+
+//Reduce time complexity:
+//store coordinates of possible queens, remove locations that can't be used
+//Add all queens at the end instead of trying to build boards with them
+
+
+
+//Tweet solution
+/*
+function N(Q, u, ee, n, s, H, R) {
+  s = 0; //solutions = 0?
+  Q = u ? Q:(1 << Q) - 1; // if u (unoccupied?) then Q = Q, else Q = ((1 << Q) - 1)  -> << a << b shifts the bits of a by b places
+  H = ~(u | ee | n) & Q; // ~ = -(N+1) where N is whatever is to the right -- it actually 'inverts the bits of N'
+
+  // ^ = bitwise XOR
+  // | = bitwise OR
+  // & = bitwise AND
+
+
+  while (H)
+  H^ = R = - H & H, // -H & H should only work if H is 0
+  s += N(Q, //solutions += result of N recursed
+  (u | R) << 1,
+  ee | R,
+  (n | R) >> 1
+  );
+
+  return s += ee == Q
+}
+
+
+function N(Q,u,a,n,s,H,R){s=0;Q=u?Q:(1<<Q)-1;H=~(u|a|n)&Q;while(H)H^=R=-H&H,s+=N(Q,(u|R)<<1,a|R,(n|R)>>1);return s+=a==Q}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
