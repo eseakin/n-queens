@@ -27,7 +27,7 @@ var createBoard = function(n) {
 var placeQueen = function(x, y, matrix) {
   //find 4 starting positions
   // in [x,y] style
-  console.log('placing queen at x:' + x + " y: " + y);
+  // console.log('placing queen at x:' + x + " y: " + y);
   var matrix = cloneMatrix(matrix);
 
   var n = matrix.length;
@@ -49,16 +49,16 @@ var placeQueen = function(x, y, matrix) {
   } else {
     minor = [x + y, 0];
   }
-  console.log(vert);
-  console.log(horiz);
-  console.log(major);
-  console.log(minor);
+  // console.log(vert);
+  // console.log(horiz);
+  // console.log(major);
+  // console.log(minor);
   var counter = 0;
   //iterate through starting positions
   var iterator = function (x, y, changeX, changeY, string) {
     if ((matrix[y] !== undefined) && (matrix[y][x] !== undefined)) {
       counter++;
-      console.log('iteration #' + counter);
+      // console.log('iteration #' + counter);
       //continue iteration
       // console.log(string);
       matrix[y][x] = -1;
@@ -138,29 +138,53 @@ var queenSol = function(n) {
   };
 
   recursor(myBoard, 0);
-  // for (var m of sol) {
-  //   for (var y of m) {
-  //     for (var x of y) {
-  //       if (x === -1) {
-  //         x = 0;
-  //       }
-  //     }
-  //   }
-  // }
-  console.log(sol[0]);
+
+
   return sol;
-  //create new board
-  //recurse over board
-  //call recurser
-  //return sol
 };
+
+//remove the -1s from a solutions array of matrices
+var cleanSol = function(sol) {
+  var cleanedSol = [];
+  var newMatrix = [];
+
+  for (var mat = 0; mat < sol.length; mat++) {
+    newMatrix = cloneMatrix(sol[mat]);
+    cleanedSol.push(newMatrix);
+  }
+
+  for (var m = 0; m < cleanedSol.length; m++) {
+    for (var y = 0; y < cleanedSol[m].length; y++) {
+      for (var x = 0; x < cleanedSol[m][y].length; x++) {
+        if (cleanedSol[m][y][x] === -1) {
+          cleanedSol[m][y][x] = 0;
+        }
+      }
+    }
+  }
+
+  return cleanedSol;
+};
+
+//GET ALL SOLUTIONS
+var myRookSols = Array(9);
+var myQueenSols = Array(9);
+
+var getSols = function() {
+
+  for (var i = 0; i < 9; i++) {
+    myRookSols[i] = cleanSol(rookSol(i));
+    myQueenSols[i] = cleanSol(queenSol(i));
+  }
+};
+
+getSols();
 
 window.findNRooksSolution = function(n) {
   if (n === 0) {
     return [[]];
   }
-  var arr = rookSol(n);
-  var solution = arr[0];
+  var solution = myRookSols[n][0];
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
@@ -171,8 +195,7 @@ window.countNRooksSolutions = function(n) {
   if (n === 0) {
     return 0;
   }
-  var arr = rookSol(n);
-  var solutionCount = arr.length; //fixme
+  var solutionCount = myRookSols[n].length;
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
@@ -180,7 +203,16 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  if (n === 0) {
+    return [];
+  }
+  if (myQueenSols[n].length === 0) {
+    return createBoard(n);
+  }
+
+  var solution = myQueenSols[n][0];
+  console.log('solutions for n:' + n + ' =');
+  console.log(myQueenSols[n]);
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
@@ -188,7 +220,11 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  if (n === 0) {
+    return 1;
+  }
+  console.log(myQueenSols);
+  var solutionCount = myQueenSols[n].length;
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
